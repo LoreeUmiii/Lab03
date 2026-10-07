@@ -9,7 +9,8 @@ def menu():
     print("4. Visualizza strumenti ordinati per marca")
     print("5. Presta uno strumento")
     print("6. Termina prestito strumento")
-    print("7. Esci")
+    print("7. Per visualizzare tutto il deposito per intero") #aggiunta della visuallizazione per intero
+    print("8. Esci")
     return input("Scegli un'opzione >> ")
 
 def main():
@@ -17,20 +18,22 @@ def main():
 
     while True:
         scelta = menu()
-
+        #FUNZIONA, TESTATA
         if scelta == "1":
-            nuovo_responsabile = input("Inserisci il nuovo responsabile: ")
-            # TODO: Aggiorna responsabile nel sistema
-
+            nuovo_responsabile = input("Inserisci il nuovo responsabile: ").strip()
+            deposito.responsabile = nuovo_responsabile
+            print(f"Responsabil del deposito cambiato correttamente: {deposito.responsabile}")
+        #FUNZIONA, TESTATA
         elif scelta == "2":
             while True:
                 try:
                     file_path = input("Inserisci il path del file da caricare: ").strip()
                     deposito.carica_file_strumenti(file_path)
+                    print(f"Deposito creato con successo! ") #piccolo controllo x il deposito
                     break
                 except Exception as e:
                     print(e)
-
+        #FUNZIONA, TESTATA
         elif scelta == "3":
             tipo = input("Tipo di strumento: ")
             marca = input("Marca: ")
@@ -43,18 +46,19 @@ def main():
             strumento = deposito.aggiungi_strumento(tipo, marca, anno_acquisto, valore)
             print(f"Strumento aggiunto: {strumento}")
 
+        #FUNZIONA, TESTATA
         elif scelta == "4":
             strumenti_ordinati = deposito.strumenti_ordinati_per_marca()
             for s in strumenti_ordinati:
                 print(f'- {s}')
-
+        #FUNZIONA, TESTATO
         elif scelta == "5":
-            id_strumento = input("ID strumento: ")
-            cognome_allievo = input("Cognome allievo: ")
+            id_strumento = input("ID strumento: ").strip()
+            cognome_allievo = input("Cognome allievo: ").strip()
             data = datetime.now().date()
             try:
                 prestito = deposito.nuovo_prestito(data, id_strumento, cognome_allievo)
-                print(f"Prestito andato a buon fine: {prestito}")
+                print(f"Prestito andato a buon fine: {prestito}") #PRESTITO A ME
             except Exception as e:
                 print(e)
 
@@ -67,6 +71,9 @@ def main():
                 print(e)
 
         elif scelta == "7":
+            print(f"{deposito.__str__()}")
+
+        elif scelta == "8":
             print("Uscita dal programma...")
             break
         else:
