@@ -61,7 +61,7 @@ def main():
                 print(f"Prestito andato a buon fine: {prestito}") #PRESTITO A ME
             except Exception as e:
                 print(e)
-
+        #FUNZIONA, TESTATO
         elif scelta == "6":
             id_prestito = input("ID prestito da terminare: ")
             try:
@@ -69,10 +69,11 @@ def main():
                 print(f"Prestito {id_prestito} terminato con successo.")
             except Exception as e:
                 print(e)
-
+        # FUNZIONA, TESTATO
+        #AGGIUNTA PERSONALE PER VEDERE IL CONTENUTO DEL DEPOOSITO DOPO AVER FATTO DELLE INTERAZIONI
         elif scelta == "7":
             print(f"{deposito.__str__()}")
-
+        # FUNZIONA, TESTATO
         elif scelta == "8":
             print("Uscita dal programma...")
             break

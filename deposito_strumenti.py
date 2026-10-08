@@ -22,8 +22,8 @@ class Strumento:
         return f"Strumento: {self.__codice} di tipo: {self.__tipo}, marca: {self.__marca}, anno: {self.__anno}, valore: {self.__valore}"
 
 class Prestito:
-    def __init__(self, codice, data, codiceStrumento, cognomeAllievo):
-        self.__codice = codice
+    def __init__(self, codiceP, data, codiceStrumento, cognomeAllievo):
+        self.__codiceP = codiceP
         self.__data = data
         self.__codiceStrumento = codiceStrumento
         self.__cognomeAllievo = cognomeAllievo
@@ -32,8 +32,12 @@ class Prestito:
     def codiceStrumento(self):
         return self.__codiceStrumento
 
+    @property
+    def codiceP(self):
+        return self.__codiceP
+
     def __str__(self): #stampare il prestito
-        return f"Prestito: {self.__codice} in data: {self.__data}. Strumento: {self.__codiceStrumento} in prestito a: {self.__cognomeAllievo}"
+        return f"Prestito: {self.__codiceP} in data: {self.__data}. Strumento: {self.__codiceStrumento} in prestito a: {self.__cognomeAllievo}"
 
 class DepositoStrumenti:
     def __init__(self, nome, responsabile):
@@ -101,9 +105,13 @@ class DepositoStrumenti:
         # TODO
         return sorted(self.strumenti, key=attrgetter("marca"))
 
+    #FUNZIONA, TESTATA
     def nuovo_prestito(self, data, id_strumento, cognome_allievo):
         """Crea un nuovo prestito"""
+        # Variabili di supporto
         strumentoTrovato = False
+        codiceMax = 0
+
         for s in self.strumenti:
             if id_strumento == s.codice:
                 strumentoTrovato = True
@@ -115,20 +123,36 @@ class DepositoStrumenti:
             if id_strumento == p.codiceStrumento:
                 raise Exception(f"Lo strumento: {id_strumento} è già stato prestato!! ")
 
+        # Da problemi con i duplicati, ma sarebbe la forma più semplice non tenendone conto
         codicePrestito = f"P{(len(self.prestiti) + 1)}"
-        #codicePrestitoFinale = f"P{codicePrestito}"
+
+        # Metodo nuvovo:
+        for p in self.prestiti:
+            codiceP = int(p.codiceP.strip("P"))
+
+            # Ultimo valore come max
+            if codiceP > codiceMax:
+                codiceMax = codiceP
+
+        codicePrestito = f"P{codiceMax + 1}"
+
         prestito = Prestito(codicePrestito, data, id_strumento, cognome_allievo)
         self.prestiti.append(prestito)
         return prestito
 
-
+    #FUNZIONA, TESTATA
     def termina_prestito(self, id_prestito):
         """Termina un prestito in atto"""
-        # TODO
-        if id_prestito not in self.prestiti:
-            raise Exception(f"Errore il seguente prestito: {id_prestito} non risulta essere del database ")
-        else:
-            prestitoDaEliminare = self.prestiti[id_prestito]
+        prestitoDaEliminare = None
+
+        for p in self.prestiti:
+            if id_prestito == p.codiceP :
+                prestitoDaEliminare = p
+
+        if prestitoDaEliminare is None:
+            raise Exception(f"Errore il seguente prestito: {id_prestito} non risulta essere nel database ")
 
         self.prestiti.remove(prestitoDaEliminare)
+        #Aggiungere il modo per cambiare il codice univoco una volta terminato
+        #un prestito.. FATTO NELLA FUNZIONE SOPRA
         return prestitoDaEliminare
